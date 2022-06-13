@@ -15,6 +15,9 @@ namespace winrt::PhrasePlanter::implementation
     MainWindow::MainWindow()
     {
         InitializeComponent();
+        // Set title bar
+        this->ExtendsContentIntoTitleBar(true);
+        this->SetTitleBar(AppTitleBar());
     }
 
     int32_t MainWindow::MyProperty()
@@ -29,6 +32,5 @@ namespace winrt::PhrasePlanter::implementation
 
     void MainWindow::onClickTranslateButton(IInspectable const&, RoutedEventArgs const&)
     {
-        
     }
 }
