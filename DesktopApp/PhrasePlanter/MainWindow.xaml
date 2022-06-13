@@ -8,6 +8,9 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
+        <TextBox Name="PhraseTextBox" PlaceholderText="Phrase to translate" />
+        <Button Name="TranslateButton" Click="onClickTranslateButton">
+          <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF2B7;"/>
+        </Button>
     </StackPanel>
 </Window>
