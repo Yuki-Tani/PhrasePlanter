@@ -11,7 +11,12 @@ namespace winrt::PhrasePlanter::implementation
         int32_t MyProperty();
         void MyProperty(int32_t value);
 
-        void onClickTranslateButton(Windows::Foundation::IInspectable const& sender, Microsoft::UI::Xaml::RoutedEventArgs const& args);
+        void OnClickTranslateButton(Windows::Foundation::IInspectable const & sender, Microsoft::UI::Xaml::RoutedEventArgs const & args);
+
+    private:
+        fire_and_forget OnClickTranslateButtonAsync();
+
+        winrt::hstring displayText;
     };
 }
 

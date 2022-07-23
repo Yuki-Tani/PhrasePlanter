@@ -10,6 +10,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
+            <RowDefinition Height="48"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -17,17 +18,33 @@
             <TextBlock x:Name="AppTitleTextBlock"
                        Text="Phrase Planter"
                        TextWrapping="NoWrap"
-                       Style="{StaticResource CaptionTextBlockStyle}"
                        VerticalAlignment="Center"
                        Margin="12,0,0,0"
             />
         </Grid>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBox Name="PhraseTextBox" PlaceholderText="Phrase to translate" />
-            <Button Name="TranslateButton" Click="onClickTranslateButton">
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Padding="8,8,8,8">
+            <TextBox x:Name="PhraseTextBox"
+                     PlaceholderText="Phrase to translate"
+                     MinWidth="400"
+                     Margin="0,0,8,0"
+            />
+            <Button x:Name="TranslateButton"
+                    Click="OnClickTranslateButton"
+                    ToolTipService.ToolTip="Translate">
               <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF2B7;"/>
             </Button>
+        </StackPanel>
+      
+        <StackPanel Grid.Row="2">
+          <ScrollViewer Height="500">
+            <TextBlock x:Name="TranslationTextBlock"
+                       Text="RESULT HERE"/>
+          </ScrollViewer>
         </StackPanel>
     </Grid>
 </Window>

@@ -4,6 +4,8 @@
 #include "MainWindow.g.cpp"
 #endif
 
+#include <regex>;
+
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;
 
@@ -30,7 +32,59 @@ namespace winrt::PhrasePlanter::implementation
         throw hresult_not_implemented();
     }
 
-    void MainWindow::onClickTranslateButton(IInspectable const&, RoutedEventArgs const&)
+    void MainWindow::OnClickTranslateButton(IInspectable const &, RoutedEventArgs const &)
     {
+        OnClickTranslateButtonAsync();
+    }
+
+    fire_and_forget MainWindow::OnClickTranslateButtonAsync()
+    {
+        winrt::apartment_context ui_thread;
+        co_await resume_background();
+
+        Windows::Web::Http::HttpClient httpClient;
+        auto headers{ httpClient.DefaultRequestHeaders() };
+        Windows::Foundation::Uri uri{ L"https://eikaiwa.dmm.com/uknow/search/?keyword=%E3%83%86%E3%82%B9%E3%83%88" };
+
+        Windows::Web::Http::HttpResponseMessage res;
+        winrt::hstring resBody;
+        bool isSuccess;
+
+        try
+        {
+            res = httpClient.GetAsync(uri).get();
+            res.EnsureSuccessStatusCode();
+            resBody = res.Content().ReadAsStringAsync().get();
+            isSuccess = true;
+        }
+        catch (winrt::hresult_error const& ex)
+        {
+            resBody = ex.message();
+            isSuccess = false;
+        }
+
+        if (!isSuccess)
+        {
+            co_await ui_thread;
+            TranslationTextBlock().Text(L"Error!\n" + resBody);
+            co_return;
+        }
+
+        // auto bodyStr = to_string(resBody);
+
+        std::wregex rgx{ LR"(<h2>\s*<a href="/uknow/questions/(\d+)/">\s*(.*)って英語でなんて言うの？\s*</a>\s*</h2>)" };
+        std::wstring wbody { resBody };
+
+        for (
+            std::wsregex_iterator itr{ wbody.cbegin(), wbody.cend(), rgx}, end;
+            itr != end;
+            ++itr
+        )
+        {
+            displayText = displayText + (*itr).format(L"$1 : $2") + L"\n";
+        }
+
+        co_await ui_thread;
+        TranslationTextBlock().Text(displayText);
     }
 }
