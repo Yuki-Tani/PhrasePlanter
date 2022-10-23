@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "QuickRegistrar (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "QuickRegistrar (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
