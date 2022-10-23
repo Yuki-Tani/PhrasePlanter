@@ -1,8 +1,8 @@
 ﻿<Application
-    x:Class="QuickRegistrar.App"
+    x:Class="PhrasePlanter.QuickRegistrar.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:QuickRegistrar">
+    xmlns:local="using:PhrasePlanter.QuickRegistrar">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

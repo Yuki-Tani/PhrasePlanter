@@ -16,16 +16,22 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
+using System.Diagnostics;
+using Windows.System;
+using Microsoft.UI.Windowing;
+
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace QuickRegistrar
+namespace PhrasePlanter.QuickRegistrar
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     public partial class App : Application
     {
+        private GlobalHotkey globalHotkey;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -42,10 +48,15 @@ namespace QuickRegistrar
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window = new MainWindow();
-            m_window.Activate();
-        }
+            Debug.WriteLine("On Launch");
 
-        private Window m_window;
+            var mainWindow = new MainWindow();
+            globalHotkey = new GlobalHotkey(mainWindow.hwnd);
+            globalHotkey.Register(GlobalHotkey.ModifierKey.MOD_ALT, VirtualKey.P, () =>
+            {
+                Debug.WriteLine("Registered hot key P!");
+                mainWindow.ToggleVisibility();
+            });
+        }
     }
 }
