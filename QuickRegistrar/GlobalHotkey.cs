@@ -62,11 +62,13 @@ namespace PhrasePlanter.QuickRegistrar
         {
             if (pfnSubWinProc != IntPtr.Zero)
             {
+                Debug.WriteLine("remove window subclass");
                 RemoveWindowSubclass(hwnd, pfnSubWinProc, (UIntPtr)1);
                 pfnSubWinProc = IntPtr.Zero;
             }
             foreach (int key in actionStore.Keys)
             {
+                Debug.WriteLine("unregister hotkey: " + key);
                 UnregisterHotKey(hwnd, key);
             }
         }

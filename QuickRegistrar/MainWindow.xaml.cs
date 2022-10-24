@@ -14,6 +14,8 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 
 using Microsoft.UI.Windowing;
+using System.Diagnostics; // Debug
+using Windows.Graphics; // SizeInt32, PointInt32
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,6 +30,9 @@ namespace PhrasePlanter.QuickRegistrar
         public readonly IntPtr hwnd;
         private readonly AppWindow appWindow;
 
+        private const int width = 640;
+        private const int height = 640;
+
         public MainWindow()
         {
             this.InitializeComponent();
@@ -36,17 +41,36 @@ namespace PhrasePlanter.QuickRegistrar
             appWindow = AppWindow.GetFromWindowId(windowId);
 
             appWindow.Title = "PhrasePlanter Quick Registrar";
+
+            appWindow.SetPresenter(AppWindowPresenterKind.CompactOverlay);
+            
+            // remove title bar
+            var titlebar = appWindow.TitleBar;
+            titlebar.ExtendsContentIntoTitleBar = true;
         }
 
         public void ToggleVisibility()
         {
-            if (appWindow.IsVisible) appWindow.Hide();
-            else appWindow.Show();
+            if (appWindow.IsVisible)
+            {
+                appWindow.Hide();
+                return;
+            }
+
+            // size
+            appWindow.Resize(new SizeInt32(width, height));
+            // position
+            var workArea = SystemParameters.GetWorkArea();
+            Debug.WriteLine($"left:{workArea.left} Top:{workArea.top} right:{workArea.right} bottom:{workArea.bottom}");
+            appWindow.Move(new PointInt32(workArea.right - width, workArea.bottom - height));
+
+            appWindow.Show();
         }
 
         private void myButton_Click(object sender, RoutedEventArgs e)
         {
             myButton.Content = "Clicked";
+            
         }
     }
 }
