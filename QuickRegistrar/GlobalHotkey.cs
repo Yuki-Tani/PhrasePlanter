@@ -14,25 +14,12 @@ namespace PhrasePlanter.QuickRegistrar
     {
         // https://learn.microsoft.com/ja-jp/windows/win32/api/winuser/nf-winuser-registerhotkey
         [DllImport("user32.dll")]
-        extern static int RegisterHotKey(IntPtr hwnd, int id, uint fsModifiers, uint vk);
+        private extern static int RegisterHotKey(IntPtr hwnd, int id, uint fsModifiers, uint vk);
 
         // https://learn.microsoft.com/ja-jp/windows/win32/api/winuser/nf-winuser-unregisterhotkey
         [DllImport("user32.dll")]
-        extern static int UnregisterHotKey(IntPtr hwnd, int id);
+        private extern static int UnregisterHotKey(IntPtr hwnd, int id);
 
-        // https://learn.microsoft.com/ja-jp/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass
-        [DllImport("comctl32.dll")]
-        extern static bool SetWindowSubclass(IntPtr hwnd, IntPtr pfnSubclass, UIntPtr uIdSubclass, UIntPtr dwRefData);
-
-        // https://learn.microsoft.com/ja-jp/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass
-        [DllImport("comctl32.dll")]
-        extern static bool RemoveWindowSubclass(IntPtr hwnd, IntPtr pfnSubclass, UIntPtr uIdSubclass);
-
-        // https://learn.microsoft.com/ja-jp/windows/win32/api/commctrl/nf-commctrl-defsubclassproc
-        [DllImport("comctl32.dll")]
-        extern static int DefSubclassProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam);
-
-        private delegate int Delegate_SubclassWinProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, UIntPtr dwRefData);
         private const uint WM_HOTKEY = 0x0312;
 
         public static class ModifierKey
@@ -44,13 +31,14 @@ namespace PhrasePlanter.QuickRegistrar
         }
 
         private IntPtr hwnd;
-        private IntPtr pfnSubWinProc;
         private Dictionary<int, Action> actionStore;
+        private WindowSubclass winSubclass;
 
         public GlobalHotkey(IntPtr hwnd)
         {
             this.hwnd = hwnd;
             actionStore = new Dictionary<int, Action>();
+            winSubclass = new WindowSubclass(hwnd, SubclassWinProc);
         }
 
         ~GlobalHotkey()
@@ -60,35 +48,23 @@ namespace PhrasePlanter.QuickRegistrar
 
         public void Dispose()
         {
-            if (pfnSubWinProc != IntPtr.Zero)
-            {
-                Debug.WriteLine("remove window subclass");
-                RemoveWindowSubclass(hwnd, pfnSubWinProc, (UIntPtr)1);
-                pfnSubWinProc = IntPtr.Zero;
-            }
             foreach (int key in actionStore.Keys)
             {
                 Debug.WriteLine("unregister hotkey: " + key);
                 UnregisterHotKey(hwnd, key);
             }
+            winSubclass.Dispose();
         }
 
         public void Register(uint modifierKeys, VirtualKey vkey, Action action)
         {
-            if (pfnSubWinProc == IntPtr.Zero)
-            {
-                Delegate_SubclassWinProc subWinProcDelegate = SubclassWinProc;
-                pfnSubWinProc = Marshal.GetFunctionPointerForDelegate(subWinProcDelegate);
-                SetWindowSubclass(hwnd, pfnSubWinProc, (UIntPtr)1, UIntPtr.Zero);
-            }
-
             var id = actionStore.Count;
             actionStore.Add(id, action);
             RegisterHotKey(hwnd, id, modifierKeys, (uint)vkey);
         }
 
         // TODO: investigate randomly happened ExecutionEngineException
-        private int SubclassWinProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, UIntPtr dwRefData)
+        private int SubclassWinProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam, UIntPtr uIdSubclass, UIntPtr dwRefData)
         {
             Debug.WriteLine("message: " + uMsg);
             switch (uMsg)
@@ -100,7 +76,7 @@ namespace PhrasePlanter.QuickRegistrar
                     return 0;
             }
 
-            return DefSubclassProc(hwnd, uMsg, wParam, lParam);
+            return WindowSubclass.DefSubclassProc(hwnd, uMsg, wParam, lParam);
         }
     }
 }

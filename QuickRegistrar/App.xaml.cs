@@ -31,6 +31,7 @@ namespace PhrasePlanter.QuickRegistrar
     public partial class App : Application
     {
         private GlobalHotkey globalHotkey;
+        private SystemTrayIcon systemTrayIcon;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -57,6 +58,9 @@ namespace PhrasePlanter.QuickRegistrar
                 Debug.WriteLine("Registered hot key P!");
                 mainWindow.ToggleVisibility();
             });
+
+            // TODO: Fix systray
+            // systemTrayIcon = new SystemTrayIcon(mainWindow.hwnd);
         }
     }
 }
