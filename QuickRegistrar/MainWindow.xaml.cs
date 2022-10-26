@@ -74,5 +74,12 @@ namespace PhrasePlanter.QuickRegistrar
 
             appWindow.Show();
         }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs args)
+        {
+            var db = new PhrasePlanterDataBase();
+            var answer = db.TestAccess();
+            SaveButton.Content = answer;
+        }
     }
 }

@@ -13,6 +13,8 @@
     >
         <TextBox PlaceholderText="English Phrase" Margin="0"/>
         <TextBox PlaceholderText="日本語 の フレーズ" Margin="0"/>
-        <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Right" Padding="40,4,40,4" />
+        <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Right" Padding="40,4,40,4"
+                Click="SaveButton_Click"
+        />
     </StackPanel>
 </Window>
