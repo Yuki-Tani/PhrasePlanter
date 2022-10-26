@@ -17,21 +17,23 @@ using Microsoft.UI.Windowing;
 using System.Diagnostics; // Debug
 using Windows.Graphics; // SizeInt32, PointInt32
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace PhrasePlanter.QuickRegistrar
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainWindow : Window
     {
-        public readonly IntPtr hwnd;
-        private readonly AppWindow appWindow;
+        private const int width = 640; // NOTE: different from XAML unit
+        private const int height = 640; // NOTE: different from XAML unit
+        //private static readonly AcrylicBackground.Style acrylicStyle = new AcrylicBackground.Style()
+        //{
+        //    tintOpacity = 0.6f,
+        //    tintLuminosityOpacity = 0.6f,
+        //    tintColor = new Windows.UI.Color() { A = 255, R = 0, G = 0, B = 0 },
+        //    fallbackColor = new Windows.UI.Color() { A = 255, R = 10, G = 10, B = 30 }
+        //};
 
-        private const int width = 640;
-        private const int height = 640;
+    public readonly IntPtr hwnd;
+        private readonly AppWindow appWindow;
+        // private AcrylicBackground acrylicBackground;
 
         public MainWindow()
         {
@@ -47,6 +49,8 @@ namespace PhrasePlanter.QuickRegistrar
             // remove title bar
             var titlebar = appWindow.TitleBar;
             titlebar.ExtendsContentIntoTitleBar = true;
+
+            // acrylicBackground = new AcrylicBackground(this, appWindow.TitleBar, acrylicStyle);
         }
 
         public void ToggleVisibility()
@@ -54,6 +58,7 @@ namespace PhrasePlanter.QuickRegistrar
             if (appWindow.IsVisible)
             {
                 appWindow.Hide();
+                // acrylicBackground.Dispose();
                 return;
             }
 
@@ -64,13 +69,10 @@ namespace PhrasePlanter.QuickRegistrar
             Debug.WriteLine($"left:{workArea.left} Top:{workArea.top} right:{workArea.right} bottom:{workArea.bottom}");
             appWindow.Move(new PointInt32(workArea.right - width, workArea.bottom - height));
 
-            appWindow.Show();
-        }
+            // acrylicBackground.Dispose();
+            // acrylicBackground = new AcrylicBackground(this, appWindow.TitleBar, acrylicStyle);
 
-        private void myButton_Click(object sender, RoutedEventArgs e)
-        {
-            myButton.Content = "Clicked";
-            
+            appWindow.Show();
         }
     }
 }
