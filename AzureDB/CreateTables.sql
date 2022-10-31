@@ -1,9 +1,13 @@
 USE PhrasePlanter
-
-CREATE TABLE Users (
-    UserID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-    UserAccount CHAR(20) NOT NULL UNIQUE,
-    UserScecretHash CHAR(20) NOT NULL,
-    Name CHAR(20) NOT NULL DEFAULT('NO NAME')
-)
 GO
+
+(-- CreateSchema.sql)
+
+-- DropTables.sql
+
+-- CreateUsersTable.sql
+-- CreatePhrasesTable.sql
+
+-- ApplySecurityFilter.sql
+
+-- CreatePrimaryUsers.scecret.sql
