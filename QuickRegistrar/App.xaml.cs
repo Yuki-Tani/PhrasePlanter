@@ -30,8 +30,9 @@ namespace PhrasePlanter.QuickRegistrar
     /// </summary>
     public partial class App : Application
     {
+        private MainWindow mainWindow;
         private GlobalHotkey globalHotkey;
-        private SystemTrayIcon systemTrayIcon;
+        // private SystemTrayIcon systemTrayIcon;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -51,11 +52,12 @@ namespace PhrasePlanter.QuickRegistrar
         {
             Debug.WriteLine("On Launch");
 
-            var mainWindow = new MainWindow();
+            mainWindow = new MainWindow();
+
             globalHotkey = new GlobalHotkey(mainWindow.hwnd);
             globalHotkey.Register(GlobalHotkey.ModifierKey.MOD_ALT, VirtualKey.P, () =>
             {
-                Debug.WriteLine("Registered hot key P!");
+                Debug.WriteLine("Hotkey detected");
                 mainWindow.ToggleVisibility();
             });
 

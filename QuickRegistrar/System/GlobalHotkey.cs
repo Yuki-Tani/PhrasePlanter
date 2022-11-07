@@ -64,7 +64,7 @@ namespace PhrasePlanter.QuickRegistrar
         }
 
         // TODO: investigate randomly happened ExecutionEngineException
-        private int SubclassWinProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam, UIntPtr uIdSubclass, UIntPtr dwRefData)
+        private IntPtr SubclassWinProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam, nuint uIdSubclass, IntPtr dwRefData)
         {
             Debug.WriteLine("message: " + uMsg);
             switch (uMsg)
@@ -73,7 +73,7 @@ namespace PhrasePlanter.QuickRegistrar
                     Debug.WriteLine("hotkey detected: " + wParam);
                     var action = actionStore[(int)wParam]; // TODO: safe cast
                     action.Invoke();
-                    return 0;
+                    return IntPtr.Zero;
             }
 
             return WindowSubclass.DefSubclassProc(hwnd, uMsg, wParam, lParam);

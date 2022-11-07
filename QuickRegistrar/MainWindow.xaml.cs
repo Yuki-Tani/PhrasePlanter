@@ -51,17 +51,19 @@ namespace PhrasePlanter.QuickRegistrar
             titlebar.ExtendsContentIntoTitleBar = true;
 
             // acrylicBackground = new AcrylicBackground(this, appWindow.TitleBar, acrylicStyle);
+
+            RootFrame.Navigate(typeof(RegistPage));
+            Show();
         }
 
         public void ToggleVisibility()
         {
-            if (appWindow.IsVisible)
-            {
-                appWindow.Hide();
-                // acrylicBackground.Dispose();
-                return;
-            }
+            if (appWindow.IsVisible) Hide();
+            else Show();
+        }
 
+        private void Show()
+        {
             // size
             appWindow.Resize(new SizeInt32(width, height));
             // position
@@ -75,11 +77,10 @@ namespace PhrasePlanter.QuickRegistrar
             appWindow.Show();
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs args)
+        private void Hide()
         {
-            var db = new PhrasePlanterDataBase();
-            var answer = db.TestAccess();
-            SaveButton.Content = answer;
+            appWindow.Hide();
+            // acrylicBackground.Dispose();
         }
     }
 }

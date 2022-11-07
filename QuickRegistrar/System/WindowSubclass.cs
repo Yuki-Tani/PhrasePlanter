@@ -7,15 +7,15 @@ namespace PhrasePlanter.QuickRegistrar
 {
     class WindowSubclass : IDisposable
     {
-        public delegate int Delegate_SubclassWinProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam, UIntPtr uIdSubclass, UIntPtr dwRefData);
+        public delegate IntPtr Delegate_SubclassWinProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam, nuint uIdSubclass, IntPtr dwRefData);
 
         // https://learn.microsoft.com/ja-jp/windows/win32/api/commctrl/nf-commctrl-defsubclassproc
         [DllImport("comctl32.dll")]
-        public extern static int DefSubclassProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+        public extern static IntPtr DefSubclassProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 
         // https://learn.microsoft.com/ja-jp/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass
         [DllImport("comctl32.dll")]
-        private extern static bool SetWindowSubclass(IntPtr hwnd, IntPtr pfnSubclass, UIntPtr uIdSubclass, UIntPtr dwRefData);
+        private extern static bool SetWindowSubclass(IntPtr hwnd, IntPtr pfnSubclass, nuint uIdSubclass, IntPtr dwRefData);
 
         // https://learn.microsoft.com/ja-jp/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass
         [DllImport("comctl32.dll")]
@@ -34,7 +34,7 @@ namespace PhrasePlanter.QuickRegistrar
 
             pfnSubWinProc = Marshal.GetFunctionPointerForDelegate(subWinProc);
             Debug.WriteLine("set window subclass");
-            SetWindowSubclass(hwnd, pfnSubWinProc, id, UIntPtr.Zero);
+            SetWindowSubclass(hwnd, pfnSubWinProc, id, IntPtr.Zero);
         }
 
         ~WindowSubclass()
